@@ -12,7 +12,7 @@
       deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }}-security main universe
 
     # Multiple recipients
-    notification_recipients: "aravind_slcs_intern2@aravind.org,karthikeyan.sudhakar@aravind.org"
+    notification_recipients: "divyadharsini@aravind.org,karthikeyan.sudhakar@aravind.org"
 
   tasks:
     - name: Clean existing sources.list.d
