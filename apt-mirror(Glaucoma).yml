@@ -1,6 +1,6 @@
 ---
 - name: Configure APT Mirror and Send Consolidated Notification
-  hosts: Glaucoma
+  hosts: Glaucoma-op
   become: yes
   vars:
     mirror_url: "http://172.17.9.58/Ubuntu/mirror/archive.ubuntu.com/ubuntu"
