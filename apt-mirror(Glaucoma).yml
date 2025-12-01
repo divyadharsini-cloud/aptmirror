@@ -66,7 +66,7 @@
         consolidated_report: |
           | Hostname/IP | Status | OS |
           |-------------|--------|----|
-          {% for host in groups['linux_servers'] %}
+          {% for host in groups['Glaucoma-op'] %}
           | {{ host }} | {{ hostvars[host].patch_summary.status | default('⚠️ No Data') }} | {{ hostvars[host].patch_summary.os | default('Unknown') }} |
           {% endfor %}
 
@@ -86,7 +86,7 @@
         body: |
           Hello Team,
 
-          The patch update operation has been completed for the server group **linux_servers**.
+          The patch update operation has been completed for the server group **Glaucoma-op**.
 
           {{ consolidated_report }}
 
