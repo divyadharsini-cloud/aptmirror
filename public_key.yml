@@ -1,7 +1,7 @@
 ---
 - name: Push SSH public key to all client machines
   hosts: 10.17.10.36
-  become: no
+  become: yes
   vars:
     ssh_public_key_data: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDDz0ipmwdGz1h9Vc/sefiFwEHTLQPmrqYOUOLMkuQsgEubrgTIbHP3spPH3u/mO1T7fwKDmQ/VIKbhGNRJlhHRjmCdo//RIjRXrr/j8u3ZSDlZqpVNpi5W10PNPg5Y1YqfYlSu5lYt/tfnjZ8ISxMhxnHMNeGg3MYp6OkSFC7tOqyhtygCHusivF/S25oV/bhuTMsvFmJi2LUq24Skktv6LeQyaBbmsMD2fuirP6f3Ibf1eoF7wGQLSMbjrYxZn63MCs/BsWwaSc0qDFSx1TEszzwbB4nMqdy/laxG0t4Sjz6CJgsxueZnMexc3wYq5lLPXVohSrrPBi9T7ApEBT1dDXT4QDJpmix6Rfx+A8JDuL7LRB9fRj2K16goU7c/tPJJR6m9E3PgIKzMj3/OC6Z92jSK1lbJ83yzQx0XbO6O7z8hlQcnYphGAyEBqx/SFg6xg8X8ATOJ5L2PF/zMb/XIADXLbFLnr8t9oxIeALL/NcnA6ZssWmsJJVJIrfwVWrqResnX2J97DToxc+tuYQ1cgSYHnJqNvSxy83kriG6/ks5cRc4nCHq5vLy8BRf62b9Nbmi1OqJxR59wYsILoImLsaxDGPGLYxw4gi7eocT6l957yWIvGuZybuSCfkKWi9oUtUYuwkMgg5sO9hcvSp9jjdlvSAtVodRGNVmz5D+37Q== mduroot@smdulb2fdcsdb10"
 
