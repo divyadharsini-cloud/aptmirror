@@ -104,7 +104,7 @@
         password: "{{ lookup('env', 'EMAIL_PASSWORD') }}"
         to: "{{ notification_recipients }}"
         from: "{{ lookup('env', 'EMAIL_USER') }}"
-        subject: "📢 Mirror Patch Report - Tirumangalam"
+        subject: "📢 Mirror Patch Report - City-Centre(MDU)"
         body: |
           Hello Team,
 
