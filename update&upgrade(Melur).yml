@@ -1,6 +1,6 @@
 ---
 - name: Configure APT Mirror, Upgrade, and Send Consolidated Notification
-  hosts: 10.17.12.40
+  hosts: Melur
   become: yes
 
   vars:
