@@ -1,6 +1,6 @@
 ---
 - name: Configure APT Mirror, Upgrade, and Send Consolidated Notification
-  hosts: linux_servers
+  hosts: 10.17.10.38
   become: yes
 
   vars:
