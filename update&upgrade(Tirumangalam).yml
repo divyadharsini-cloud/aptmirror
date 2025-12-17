@@ -118,11 +118,11 @@
         password: "{{ lookup('env', 'EMAIL_PASSWORD') }}"
         to: "{{ notification_recipients }}"
         from: "{{ lookup('env', 'EMAIL_USER') }}"
-        subject: "📢 Mirror Patch Report - City-Centre(MDU)"
+        subject: "📢 Mirror Patch Report - Tirumangalam"
         body: |
           Hello Team,
 
-          The patch update and upgrade operation has been completed for the server group **CC-MDU**.
+          The patch update and upgrade operation has been completed for the server group **Tirumangalam**.
 
           {{ consolidated_report }}
 
