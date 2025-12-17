@@ -1,7 +1,8 @@
 ---
 - name: Configure APT Mirror, Upgrade, and Send Consolidated Notification
-  hosts: Melur
+  hosts: 10.17.12.40
   become: yes
+
   vars:
     mirror_url: "http://172.17.9.58/Ubuntu/mirror/archive.ubuntu.com/ubuntu"
     release: "noble"
@@ -11,7 +12,6 @@
       deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }}-updates main universe
       deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }}-security main universe
 
-    # Multiple recipients
     notification_recipients: "divyadharsini@aravind.org,karthikeyan.sudhakar@aravind.org"
 
   tasks:
@@ -56,7 +56,11 @@
         - name: Mark status SUCCESS or UP-TO-DATE
           set_fact:
             patch_status: >-
-              {% if sources_result.changed or apt_result.changed or upgrade_result.changed or autoremove_result.changed or autoclean_result.changed %}
+              {% if sources_result.changed
+                    or apt_result.changed
+                    or upgrade_result.changed
+                    or autoremove_result.changed
+                    or autoclean_result.changed %}
               ✅ SUCCESS
               {% else %}
               🔄 UP-TO-DATE
@@ -66,6 +70,7 @@
         - name: Mark status FAILED
           set_fact:
             patch_status: "❌ FAILED"
+
         - name: Set fallback results
           set_fact:
             sources_result: { changed: false }
@@ -79,6 +84,15 @@
         patch_summary:
           status: "{{ patch_status }}"
           os: "{{ ansible_distribution }} {{ ansible_distribution_version }}"
+
+    # 🔑 GRAFANA INTEGRATION (AUTO-CREATES FILE IF MISSING)
+    - name: Write patch result for Grafana
+      copy:
+        dest: /opt/patch_status.txt
+        mode: '0644'
+        content: |
+          result={{ patch_status }}
+          time={{ ansible_date_time.epoch }}
 
     - name: Build consolidated results table (run once)
       run_once: true
@@ -104,11 +118,11 @@
         password: "{{ lookup('env', 'EMAIL_PASSWORD') }}"
         to: "{{ notification_recipients }}"
         from: "{{ lookup('env', 'EMAIL_USER') }}"
-        subject: "📢 Mirror Patch Report - Melur"
+        subject: "📢 Mirror Patch Report - City-Centre(MDU)"
         body: |
           Hello Team,
 
-          The patch update and upgrade operation has been completed for the server group **Melur**.
+          The patch update and upgrade operation has been completed for the server group **CC-MDU**.
 
           {{ consolidated_report }}
 
