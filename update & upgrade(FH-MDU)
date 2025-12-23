@@ -1,0 +1,130 @@
+---
+- name: Configure APT Mirror, Upgrade, and Send Consolidated Notification
+  hosts: FH-1G(reach)
+  become: yes
+
+  vars:
+    mirror_url: "http://172.17.9.58/Ubuntu/mirror/archive.ubuntu.com/ubuntu"
+    release: "noble"
+
+    sources_content: |
+      deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }} main universe
+      deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }}-updates main universe
+      deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }}-security main universe
+
+    notification_recipients: "divyadharsini@aravind.org,karthikeyan.sudhakar@aravind.org"
+
+  tasks:
+    - name: Clean existing sources.list.d
+      file:
+        path: /etc/apt/sources.list.d/
+        state: absent
+
+    - name: Recreate sources.list.d directory
+      file:
+        path: /etc/apt/sources.list.d/
+        state: directory
+
+    - name: Patch Block
+      block:
+        - name: Update sources.list with local mirror
+          copy:
+            dest: /etc/apt/sources.list
+            content: "{{ sources_content }}"
+          register: sources_result
+
+        - name: Update APT package cache
+          apt:
+            update_cache: yes
+          register: apt_result
+
+        - name: Upgrade all packages (dist-upgrade)
+          apt:
+            upgrade: dist
+          register: upgrade_result
+
+        - name: Autoremove unused packages
+          apt:
+            autoremove: yes
+          register: autoremove_result
+
+        - name: Autoclean apt cache
+          apt:
+            autoclean: yes
+          register: autoclean_result
+
+        - name: Mark status SUCCESS or UP-TO-DATE
+          set_fact:
+            patch_status: >-
+              {% if sources_result.changed
+                    or apt_result.changed
+                    or upgrade_result.changed
+                    or autoremove_result.changed
+                    or autoclean_result.changed %}
+              ✅ SUCCESS
+              {% else %}
+              🔄 UP-TO-DATE
+              {% endif %}
+
+      rescue:
+        - name: Mark status FAILED
+          set_fact:
+            patch_status: "❌ FAILED"
+
+        - name: Set fallback results
+          set_fact:
+            sources_result: { changed: false }
+            apt_result: { changed: false }
+            upgrade_result: { changed: false }
+            autoremove_result: { changed: false }
+            autoclean_result: { changed: false }
+
+    - name: Save patch status into hostvars
+      set_fact:
+        patch_summary:
+          status: "{{ patch_status }}"
+          os: "{{ ansible_distribution }} {{ ansible_distribution_version }}"
+
+    # 🔑 GRAFANA INTEGRATION (AUTO-CREATES FILE IF MISSING)
+    - name: Write patch result for Grafana
+      copy:
+        dest: /opt/patch_status.txt
+        mode: '0644'
+        content: |
+          result={{ patch_status }}
+          time={{ ansible_date_time.epoch }}
+
+    - name: Build consolidated results table (run once)
+      run_once: true
+      delegate_to: localhost
+      become: no
+      set_fact:
+        consolidated_report: |
+          | Hostname/IP | Status | OS |
+          |-------------|--------|----|
+          {% for host in play_hosts %}
+          | {{ host }} | {{ hostvars[host].patch_summary.status | default('⚠️ No Data') }} | {{ hostvars[host].patch_summary.os | default('Unknown') }} |
+          {% endfor %}
+
+    - name: Send consolidated notification email
+      run_once: true
+      delegate_to: localhost
+      become: no
+      community.general.mail:
+        host: smtp.gmail.com
+        port: 587
+        secure: starttls
+        username: "{{ lookup('env', 'EMAIL_USER') }}"
+        password: "{{ lookup('env', 'EMAIL_PASSWORD') }}"
+        to: "{{ notification_recipients }}"
+        from: "{{ lookup('env', 'EMAIL_USER') }}"
+        subject: "📢 Mirror Patch Report - City-Centre(MDU)"
+        body: |
+          Hello Team,
+
+          The patch update and upgrade operation has been completed for the server group **CC-MDU**.
+
+          {{ consolidated_report }}
+
+          Regards,
+          🔧 Ansible Automation System
