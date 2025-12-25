@@ -118,11 +118,11 @@
         password: "{{ lookup('env', 'EMAIL_PASSWORD') }}"
         to: "{{ notification_recipients }}"
         from: "{{ lookup('env', 'EMAIL_USER') }}"
-        subject: "📢 Mirror Patch Report - Glaucoma-op"
+        subject: "📢 Mirror Patch Report - FH-1G(reach)"
         body: |
           Hello Team,
 
-          The patch update and upgrade operation has been completed for the server group **Glaucoma-op**.
+          The patch update and upgrade operation has been completed for the server group **FH-1G(reach)**.
 
           {{ consolidated_report }}
 
