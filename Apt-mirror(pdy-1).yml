@@ -5,12 +5,15 @@
 
   vars:
     mirror_url: "http://172.21.1.3/Ubuntu/mirror/172.17.9.58/Ubuntu/mirror/archive.ubuntu.com/ubuntu"
+    mint_url: "http://172.21.1.3/Ubuntu/mirror/172.17.9.58/Ubuntu/mirror/packages.linuxmint.com"
     release: "noble"
+    mint_release: "xia"
 
     sources_content: |
       deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }} main universe
       deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }}-updates main universe
       deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }}-security main universe
+      deb [arch=amd64 trusted=yes] {{ mint_url }} {{ mint_release }} main upstream import backport
 
     notification_recipients: "divyadharsini@aravind.org,karthikeyan.sudhakar@aravind.org"
 
