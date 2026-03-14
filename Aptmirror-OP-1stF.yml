@@ -1,6 +1,6 @@
 ---
 - name: Configure APT Mirror, Upgrade, and Send Consolidated Notification
-  hosts: TMDUPH3FCOR0432
+  hosts: DMDUPHGFMRD0026
   become: yes
 
   vars:
