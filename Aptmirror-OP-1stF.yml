@@ -1,6 +1,6 @@
 ---
 - name: Configure APT Mirror, Upgrade, and Send Consolidated Notification
-  hosts: DMDUPH2FUVE0315
+  hosts: Cornea-op
   become: yes
 
   vars:
