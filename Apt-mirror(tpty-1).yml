@@ -1,6 +1,6 @@
 ---
 - name: Configure APT Mirror, Upgrade, and Send Consolidated Notification
-  hosts: Batch-1
+  hosts: TTPTPH1FPAE0008
   become: yes
 
   vars:
