@@ -1,16 +1,19 @@
 ---
 - name: Configure APT Mirror, Upgrade, and Send Consolidated Notification
-  hosts: OP-2
+  hosts: Tirumangalam
   become: yes
 
   vars:
     mirror_url: "http://172.17.9.58/Ubuntu/mirror/archive.ubuntu.com/ubuntu"
+    mint_url: "http://172.17.9.58/Ubuntu/mirror/packages.linuxmint.com"
     release: "noble"
+    mint_release: "xia"
 
     sources_content: |
       deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }} main universe
       deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }}-updates main universe
       deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }}-security main universe
+      deb [arch=amd64 trusted=yes] {{ mint_url }} {{ mint_release }} main upstream import backport
 
     notification_recipients: "divyadharsini@aravind.org,karthikeyan.sudhakar@aravind.org"
 
@@ -118,11 +121,11 @@
         password: "{{ lookup('env', 'EMAIL_PASSWORD') }}"
         to: "{{ notification_recipients }}"
         from: "{{ lookup('env', 'EMAIL_USER') }}"
-        subject: "📢 Mirror Patch Report - GF-1(MDU)"
+        subject: "📢 Mirror Patch Report - OP1stF-1(MDU)"
         body: |
           Hello Team,
 
-          The patch update and upgrade operation has been completed for the server group **GF-1(MDU)**.
+          The patch update and upgrade operation has been completed for the server group **OP1stF-1(MDU)**.
 
           {{ consolidated_report }}
 
