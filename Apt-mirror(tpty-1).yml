@@ -1,6 +1,6 @@
 ---
 - name: Configure APT Mirror, Upgrade, and Send Consolidated Notification
-  hosts: DTPTPH1FOPT0049, DTPTPH1FOPT0050, DTPTPH1FOPT0051, DTPTPH1FOPT0056, DTPTPH1FPRE0016, DTPTPH1FUI10036
+  hosts: Batch3
   become: yes
 
   vars:
