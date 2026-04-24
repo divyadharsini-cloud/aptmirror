@@ -1,13 +1,13 @@
 ---
 - name: Configure APT Mirror, Upgrade, and Send Consolidated Notification
-  hosts: Batch5
+  hosts: DPDYPH1FGLA0637, DPDYPH1FGLA0661, DPDYPH1FGLA0662, DPDYPH1FGLA0663, DPDYPH1FGLA0664, DPDYPH1FCOR0665, DPDYPH1FCOR0666
   become: yes
 
   vars:
     mirror_url: "http://172.21.1.3/Ubuntu/mirror/172.17.9.58/Ubuntu/mirror/archive.ubuntu.com/ubuntu"
     mint_url: "http://172.21.1.3/Ubuntu/mirror/172.17.9.58/Ubuntu/mirror/packages.linuxmint.com"
     release: "noble"
-    mint_release: "xia"
+    mint_release: "zena"
 
     sources_content: |
       deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }} main universe
