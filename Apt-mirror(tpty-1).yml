@@ -7,7 +7,7 @@
     mirror_url: "http://172.30.1.125/Ubuntu/mirror/172.17.9.58/Ubuntu/mirror/archive.ubuntu.com/ubuntu"
     mint_url: "http://172.30.1.125/Ubuntu/mirror/172.17.9.58/Ubuntu/mirror/packages.linuxmint.com"
     release: "noble"
-    mint_release: "xia"
+    mint_release: "zena"
 
     sources_content: |
       deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }} main universe
