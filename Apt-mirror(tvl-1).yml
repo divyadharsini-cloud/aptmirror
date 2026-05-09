@@ -1,6 +1,6 @@
 ---
 - name: Configure APT Mirror, Upgrade, and Send Consolidated Notification
-  hosts: PAE
+  hosts: IOL
   become: yes
 
   vars:
