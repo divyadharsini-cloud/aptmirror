@@ -5,7 +5,7 @@
 
   vars:
     mirror_url: "http://172.17.9.58/Ubuntu/mirror/archive.ubuntu.com/ubuntu"
-    mint_url: "http://172.17.9.58/Ubuntu/mirror/packages.linuxmint.com/ubuntu"
+    mint_url: "http://172.17.9.58/Ubuntu/mirror/packages.linuxmint.com"
 
     release: "noble"
     mint_release: "zena"
