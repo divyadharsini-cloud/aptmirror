@@ -1,6 +1,6 @@
 ---
 - name: Configure APT Mirror, Patch OS, Hold Firefox, and Send Report
-  hosts: Batch-1
+  hosts: Old-version
   become: yes
 
   vars:
@@ -8,7 +8,7 @@
     mint_url: "http://172.32.5.22/ubuntu/packages.linuxmint.com"
 
     release: "noble"
-    mint_release: "zena"
+    mint_release: "xia"
 
     sources_content: |
       deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }} main universe
