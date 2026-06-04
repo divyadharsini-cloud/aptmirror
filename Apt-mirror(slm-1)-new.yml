@@ -1,6 +1,6 @@
 ---
 - name: Configure APT Mirror, Patch OS, Hold Firefox, and Send Report
-  hosts: Old-version
+  hosts: New-version
   become: yes
 
   vars:
