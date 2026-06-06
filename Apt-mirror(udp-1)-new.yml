@@ -4,8 +4,8 @@
   become: yes
 
   vars:
-    mirror_url: "http://172.19.1.120/ubuntu/archive.ubuntu.com/ubuntu"
-    mint_url: "http://172.19.1.120/ubuntu/packages.linuxmint.com"
+    mirror_url: "http://172.20.1.113/ubuntu/archive.ubuntu.com/ubuntu"
+    mint_url: "http://172.20.1.113/ubuntu/packages.linuxmint.com"
 
     release: "noble"
     mint_release: "xia"
