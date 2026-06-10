@@ -1,6 +1,6 @@
 ---
 - name: Configure APT Mirror, Patch OS, Hold Firefox, and Send Report
-  hosts: TUP
+  hosts: UN-1
   become: yes
 
   vars:
