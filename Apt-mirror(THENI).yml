@@ -1,6 +1,6 @@
 ---
 - name: Configure APT Mirror, Patch OS, Hold Firefox, and Send Report
-  hosts: Batch-1
+  hosts: Batch-2
   become: yes
 
   vars:
