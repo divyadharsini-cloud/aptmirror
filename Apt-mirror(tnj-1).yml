@@ -1,6 +1,6 @@
 ---
 - name: Configure APT Mirror, Upgrade, and Send Consolidated Notification
-  hosts: DTNJFH3FOTJ0131, DTNJPH1FRET0159, DTNJFH3FIOT0139
+  hosts: DTNJPHGFADM0123, DTNJPHGFSNS0148, DTNJPHGFADM0157
   become: yes
 
   vars:
