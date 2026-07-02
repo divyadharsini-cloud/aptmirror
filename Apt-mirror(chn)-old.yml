@@ -1,6 +1,6 @@
 ---
 - name: Configure APT Mirror, Patch OS, Hold Firefox, and Send Report
-  hosts: DPDYFHGFSDR0777, DPDYFHGFSDR0778, DPDYFHGFSDR0779, DPDYFHGFSDR0780, DPDYFHGFSIV0781, DPDYFHGFCHK0782, DPDYFHGFINV0771, DPDYFHGFSRF0776
+  hosts: Batch-1
   become: yes
 
   vars:
@@ -178,7 +178,7 @@
           from: "{{ lookup('env','EMAIL_USER') }}"
           to: "{{ notification_recipients }}"
 
-          subject: "📢 Mirror Patch Report - Pondicherry(1)"
+          subject: "📢 Mirror Patch Report - Chennai"
 
           body: |
               Hello Team,
