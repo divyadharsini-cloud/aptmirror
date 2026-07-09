@@ -1,0 +1,210 @@
+---
+- name: Configure APT Mirror, Patch OS, Hold Firefox, and Send Report
+  hosts: old
+  become: yes
+
+  vars:
+    mirror_url: "http://172.21.1.3/Ubuntu/mirror/172.17.9.58/Ubuntu/mirror/archive.ubuntu.com/ubuntu"
+    mint_url: "http://172.21.1.3/Ubuntu/mirror/172.17.9.58/Ubuntu/mirror/packages.linuxmint.com"
+
+    release: "noble"
+    mint_release: "zena"
+
+    sources_content: |
+      deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }} main universe
+      deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }}-updates main universe
+      deb [arch=amd64 trusted=yes] {{ mirror_url }} {{ release }}-security main universe
+      deb [arch=amd64 trusted=yes] {{ mint_url }} {{ mint_release }} main upstream import backport
+
+    notification_recipients: "divyadharsini@aravind.org,karthikeyan.sudhakar@aravind.org"
+
+
+  tasks:
+
+####################################################
+# HOLD FIREFOX PERMANENTLY
+####################################################
+
+    - name: Hold Firefox package permanently
+      ansible.builtin.dpkg_selections:
+        name: firefox
+        selection: hold
+
+
+    - name: Verify held packages
+      shell: apt-mark showhold
+      register: held_packages
+      changed_when: false
+
+
+    - name: Show held packages
+      debug:
+        var: held_packages.stdout_lines
+
+
+####################################################
+# CONFIGURE SOURCES
+####################################################
+
+    - name: Remove existing sources.list.d files
+      shell: rm -f /etc/apt/sources.list.d/*.list
+      ignore_errors: yes
+
+
+    - name: Update sources.list
+      copy:
+        dest: /etc/apt/sources.list
+        content: "{{ sources_content }}"
+      register: sources_result
+
+
+####################################################
+# PATCH BLOCK
+####################################################
+
+    - name: Patch block
+      block:
+
+          - name: Update apt cache
+            apt:
+              update_cache: yes
+            register: apt_result
+
+
+          - name: Upgrade packages except held packages
+            apt:
+              upgrade: dist
+            register: upgrade_result
+
+
+          - name: Remove unused packages
+            apt:
+              autoremove: yes
+            register: autoremove_result
+
+
+          - name: Clean apt cache
+            apt:
+              autoclean: yes
+            register: autoclean_result
+
+
+          - name: Get Firefox version
+            shell: firefox --version
+            register: firefox_version
+            changed_when: false
+
+
+          - name: Mark patch status
+            set_fact:
+              patch_status: >-
+                {% if upgrade_result.changed %}
+                ✅ SUCCESS
+                {% else %}
+                🔄 UP-TO-DATE
+                {% endif %}
+
+
+      rescue:
+
+          - name: Patch failed
+            set_fact:
+              patch_status: "❌ FAILED"
+
+
+####################################################
+# SAVE STATUS FOR GRAFANA
+####################################################
+
+    - name: Save patch summary
+      set_fact:
+        patch_summary:
+          status: "{{ patch_status }}"
+          os: "{{ ansible_distribution }} {{ ansible_distribution_version }}"
+          firefox: "{{ firefox_version.stdout | default('Unknown') }}"
+
+
+    - name: Write Grafana status file
+      copy:
+        dest: /opt/patch_status.txt
+        mode: "0644"
+        content: |
+          result={{ patch_status }}
+          os={{ ansible_distribution }}
+          firefox={{ firefox_version.stdout }}
+          time={{ ansible_date_time.epoch }}
+
+
+####################################################
+# BUILD CONSOLIDATED REPORT
+####################################################
+
+    - name: Build report
+      run_once: true
+      delegate_to: localhost
+      become: no
+
+      set_fact:
+        consolidated_report: |
+          | Host | Status | OS | Firefox |
+          |------|--------|----|----------|
+          {% for host in play_hosts %}
+          | {{ host }}
+          | {{ hostvars[host].patch_summary.status | default('No Data') }}
+          | {{ hostvars[host].patch_summary.os | default('Unknown') }}
+          | {{ hostvars[host].patch_summary.firefox | default('Unknown') }}
+          |
+          {% endfor %}
+
+
+####################################################
+# SEND EMAIL REPORT
+####################################################
+
+    - name: Send notification email
+      run_once: true
+      delegate_to: localhost
+      become: no
+
+      community.general.mail:
+
+          host: smtp.gmail.com
+          port: 587
+          secure: starttls
+
+          username: "{{ lookup('env','EMAIL_USER') }}"
+          password: "{{ lookup('env','EMAIL_PASSWORD') }}"
+
+          from: "{{ lookup('env','EMAIL_USER') }}"
+          to: "{{ notification_recipients }}"
+
+          subject: "📢 Mirror Patch Report - Pondicherry(1)"
+
+          body: |
+              Hello Team,
+
+              Patch operation completed.
+
+              ===================================================
+              PATCH REPORT
+              ===================================================
+
+              {{ consolidated_report }}
+
+
+              ===================================================
+              HELD PACKAGES
+              ===================================================
+
+              {{ held_packages.stdout }}
+
+
+              ===================================================
+              FIREFOX VERSION AFTER PATCH
+              ===================================================
+
+              {{ firefox_version.stdout }}
+
+
+              Regards,
+              🔧 Ansible Automation System
