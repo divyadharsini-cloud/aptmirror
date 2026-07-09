@@ -4,8 +4,8 @@
   become: yes
 
   vars:
-    mirror_url: "http://172.21.1.3/Ubuntu/mirror/172.17.9.58/Ubuntu/mirror/archive.ubuntu.com/ubuntu"
-    mint_url: "http://172.21.1.3/Ubuntu/mirror/172.17.9.58/Ubuntu/mirror/packages.linuxmint.com"
+    mirror_url: "http://172.31.4.25/Ubuntu/mirror/172.17.9.58/Ubuntu/mirror/archive.ubuntu.com/ubuntu"
+    mint_url: "http://172.31.4.25/Ubuntu/mirror/172.17.9.58/Ubuntu/mirror/packages.linuxmint.com"
 
     release: "noble"
     mint_release: "zena"
