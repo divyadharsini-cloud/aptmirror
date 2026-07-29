@@ -1,6 +1,6 @@
 ---
 - name: Configure APT Mirror, Patch OS, Hold Firefox, and Send Report
-  hosts: old
+  hosts: DCHNFHGFDNS0001, DCHNFHGFDOC006, DCHNPHGFCMS0002, TCHNFH1FIOLRE05, TCHNFHGFREF0005, TCHNPH1FIODR003, TCHNPH1FIOLR001, TCHNPH1FU3I0001
   become: yes
 
   vars:
